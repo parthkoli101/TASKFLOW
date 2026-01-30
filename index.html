@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | AI-Powered Productivity Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-text {
+            transform: translateX(-20px);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: #3498db;
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 25px auto;
+            width: fit-content;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            width: 180px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #3498db;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .hero-image {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            transform: translateX(30px);
+        }
+
+        .dashboard-container {
+            width: 100%;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 25px;
+            position: relative;
+        }
+
+        .dashboard-preview {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .feature-card {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            width: 200px;
+        }
+
+        .feature-card-1 {
+            top: -15px;
+            right: -25px;
+        }
+
+        .feature-card-2 {
+            bottom: -15px;
+            left: -25px;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .card-icon i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .feature-highlight {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .feature-highlight-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .highlight-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .highlight-icon i {
+            color: #3498db;
+            font-size: 18px;
+        }
+
+        .highlight-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .highlight-desc {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.5;
+        }
+
+        .title-line {
+            display: block;
+        }
+
+        .title-line-2 {
+            display: inline;
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .hero-text, .hero-image {
+                transform: none;
+            }
+            
+            .hero-image {
+                height: auto;
+                margin-top: 30px;
+            }
+            
+            .feature-card {
+                display: none;
+            }
+            
+            .feature-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                margin: 20px 0;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="brand-name">TaskFlow</div>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="title-line">Automated Task</span>
+                    <span class="title-line">Management Where <span class="title-line-2">Work Meets Intelligence</span></span>
+                </h1>
+                
+                <div class="feature-highlights">
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-header">
+                            <div class="highlight-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3 class="highlight-title">Smart Task Management</h3>
+                        </div>
+                        <p class="highlight-desc">
+                            Smart skill-based task assignment ensures optimal workload distribution and improved team efficiency.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-header">
+                            <div class="highlight-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="highlight-title">Performance Analytics</h3>
+                        </div>
+                        <p class="highlight-desc">
+                            Real-time insights and predictive analytics help you understand and optimize your team's productivity patterns.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <a href="register.php" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </a>
+                    <a href="signin.php" class="btn btn-secondary">
+                        <i class="fas fa-user-shield"></i> Sign In
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <div class="dashboard-container">
+                    <svg class="dashboard-preview" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="50" width="300" height="200" rx="15" fill="#f8f9fa" stroke="#e2e8f0" stroke-width="2"/>
+                        <rect x="70" y="80" width="60" height="8" rx="4" fill="#3498db"/>
+                        <rect x="70" y="100" width="120" height="6" rx="3" fill="#e2e8f0"/>
+                        <rect x="70" y="120" width="80" height="6" rx="3" fill="#e2e8f0"/>
+                        <rect x="70" y="150" width="60" height="8" rx="4" fill="#2ecc71"/>
+                        <rect x="70" y="170" width="140" height="6" rx="3" fill="#e2e8f0"/>
+                        <rect x="70" y="190" width="100" height="6" rx="3" fill="#e2e8f0"/>
+                        <circle cx="320" cy="90" r="8" fill="#3498db"/>
+                        <circle cx="320" cy="120" r="8" fill="#e2e8f0"/>
+                        <circle cx="320" cy="160" r="8" fill="#2ecc71"/>
+                        <circle cx="320" cy="190" r="8" fill="#e2e8f0"/>
+                    </svg>
+                    
+                    <div class="feature-card feature-card-1">
+                        <div class="card-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="card-title">Workflow Organization</div>
+                        <div class="card-desc">Organize and prioritize tasks with intelligent automation and customizable workflows.</div>
+                    </div>
+                    
+                    <div class="feature-card feature-card-2">
+                        <div class="card-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="card-title">NLP Processing</div>
+                        <div class="card-desc">Gain insights into team performance and productivity with detailed reporting.
+                            </p>
+                        </div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

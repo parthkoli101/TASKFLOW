@@ -1,0 +1,204 @@
+CREATE TABLE company_registration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR(255) NOT NULL,
+    company_id VARCHAR(100) NOT NULL UNIQUE,
+    company_code VARCHAR(255) NOT NULL,  
+    admin_firstname VARCHAR(100) NOT NULL,
+    admin_lastname VARCHAR(100) NOT NULL,
+    admin_email VARCHAR(255) NOT NULL UNIQUE,
+    admin_password VARCHAR(255) NOT NULL, 
+    is_verified TINYINT(1) DEFAULT 0,
+    reset_token VARCHAR(255) NULL,
+    reset_expiry DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employee_registration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_firstname VARCHAR(100) NOT NULL,
+    employee_lastname VARCHAR(100) NOT NULL,
+    employee_email VARCHAR(255) NOT NULL UNIQUE,
+    employee_password VARCHAR(255) NOT NULL,  
+    company_id VARCHAR(100) NOT NULL,
+    company_code VARCHAR(255) NOT NULL,  
+    is_verified TINYINT(1) DEFAULT 0,
+    reset_token VARCHAR(255) NULL,
+    reset_expiry DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(50) UNIQUE,
+    company_id VARCHAR(100) NOT NULL,
+    department_code VARCHAR(255) NOT NULL,
+    no_of_employees INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE
+);
+
+CREATE TABLE employees_in_department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_firstname VARCHAR(100) NOT NULL,
+    employee_lastname VARCHAR(100) NOT NULL,
+    employee_email VARCHAR(255) NOT NULL UNIQUE,
+    department_name VARCHAR(50) NOT NULL,
+    company_id VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (department_name) REFERENCES department(department_name) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE documentation_tasks (
+    doc_task_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id VARCHAR(100) NOT NULL,
+    employee_id INT NOT NULL,
+    task_title VARCHAR(255) NOT NULL,
+    task_description TEXT,
+    task_keywords TEXT,
+    required_skill VARCHAR(255) NOT NULL,
+    priority ENUM('low','medium','high') NOT NULL,
+    difficulty ENUM('easy','medium','hard') NOT NULL,
+    deadline TIMESTAMP NOT NULL,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    submitted_file VARCHAR(255),
+    submitted_at TIMESTAMP NULL,
+    submitted_on_time ENUM('yes','no'),
+    relevance_score FLOAT,
+
+    no_of_reassignments INT,
+    last_reassigned_at TIMESTAMP NULL,
+
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employee_registration(id) ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE coding_tasks (
+    code_task_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id VARCHAR(100) NOT NULL,
+    employee_id INT NOT NULL,
+    task_title VARCHAR(255) NOT NULL,
+    task_description TEXT,
+    required_skill VARCHAR(255) NOT NULL,
+    priority ENUM('low','medium','high') NOT NULL,
+    difficulty ENUM('easy','medium','hard') NOT NULL,
+    deadline TIMESTAMP NOT NULL,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    submitted_file VARCHAR(255),
+    submitted_at TIMESTAMP NULL,
+    submitted_on_time ENUM('yes','no'),
+    code_complexity ENUM('Low','Medium','High'),
+    time_complexity VARCHAR(50),
+    space_complexity VARCHAR(50),
+    code_cost INT,
+    relevance_score FLOAT,
+
+    no_of_reassignments INT,
+    last_reassigned_at TIMESTAMP NULL,
+
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employee_registration(id) ON DELETE CASCADE
+);
+
+
+
+
+
+
+CREATE TABLE task_feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_type ENUM('documentation','coding') NOT NULL,
+    doc_task_id INT DEFAULT NULL,
+    code_task_id INT DEFAULT NULL,
+    employee_email VARCHAR(255) NOT NULL,
+    reviewer_email VARCHAR(255) NOT NULL,
+    feedback_text TEXT,
+    rating_quality INT CHECK (rating_quality BETWEEN 1 AND 5),
+    rating_efficiency INT CHECK (rating_efficiency BETWEEN 1 AND 5),
+    rating_teamwork INT CHECK (rating_teamwork BETWEEN 1 AND 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (doc_task_id) REFERENCES documentation_tasks(doc_task_id) ON DELETE CASCADE,
+    FOREIGN KEY (code_task_id) REFERENCES coding_tasks(code_task_id) ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE employee_performance_summary (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_email VARCHAR(255) NOT NULL,
+    company_id VARCHAR(100) NOT NULL,
+
+    total_tasks INT,
+    tasks_completed INT,
+    tasks_on_time INT,
+
+    tasks_completed_low_priority INT,
+    tasks_completed_medium_priority INT,
+    tasks_completed_high_priority INT,
+
+    tasks_completed_easy INT,
+    tasks_completed_medium INT,
+    tasks_completed_hard INT,
+
+    avg_relevance_score FLOAT,
+    avg_code_complexity VARCHAR(10),
+    avg_quality_rating FLOAT,
+    avg_efficiency_rating FLOAT,
+    avg_teamwork_rating FLOAT,
+
+    no_of_reassignments INT,
+
+    performance_index FLOAT,
+    summary_period DATE,
+
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE task_reassignment_feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_type ENUM('documentation','coding') NOT NULL,
+    doc_task_id INT DEFAULT NULL,
+    code_task_id INT DEFAULT NULL,
+    reassigned_to_employee_id INT NOT NULL,
+    reassigned_by_employee_email VARCHAR(255) NOT NULL,
+    feedback_text TEXT,
+    reassignment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (doc_task_id) REFERENCES documentation_tasks(doc_task_id) ON DELETE CASCADE,
+    FOREIGN KEY (code_task_id) REFERENCES coding_tasks(code_task_id) ON DELETE CASCADE,
+    FOREIGN KEY (reassigned_to_employee_id) REFERENCES employee_registration(id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE employee_skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_email VARCHAR(255) NOT NULL,
+    company_id VARCHAR(100) NOT NULL,
+    skills TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_employee_skills (employee_email, company_id),
+    FOREIGN KEY (company_id) REFERENCES company_registration(company_id) ON DELETE CASCADE
+);
+
+
+
+ALTER TABLE coding_tasks
+  ADD COLUMN cyclomatic_complexity DECIMAL(10,2) DEFAULT NULL AFTER code_cost,
+  ADD COLUMN lines_of_code INT DEFAULT NULL AFTER cyclomatic_complexity,
+  ADD COLUMN function_count INT DEFAULT NULL AFTER lines_of_code,
+  MODIFY COLUMN time_complexity VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  MODIFY COLUMN space_complexity VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  ALTER TABLE coding_tasks MODIFY code_complexity VARCHAR(20);
